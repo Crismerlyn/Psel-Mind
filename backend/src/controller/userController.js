@@ -14,7 +14,7 @@ exports.createUser = async (req, res) => {
             usuarios: result.rows
         })
     } catch (error) {
-        res.send({
+        res.status(400).send({
             message: 'Não foi possível inserir os dados', 
             error
         })
