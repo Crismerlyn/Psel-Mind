@@ -15,4 +15,6 @@ router.get('/verUsuarios', controller.findUser)
 
 router.post('/loginUsuario', controller.loginUser)
 
+router.patch('/updateUsuario', controller.updateUser)
+
 module.exports = router;

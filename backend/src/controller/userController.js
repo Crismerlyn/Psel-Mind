@@ -4,10 +4,14 @@ exports.createUser = async (req, res) => {
     try {
         const {nome, cpf, email, senha, img} = req.body;
 
-        await db.query(`insert into Usuarios (nome, cpf, email, senha, img) values('${nome}', ${cpf}, '${email}', '${senha}', '${img}')`)
+        await db.query(`insert into Usuarios (nome, cpf, email, senha, img, ativo, admin)
+         values('${nome}', ${cpf}, '${email}', '${senha}', '${img}', 'true', 'false')`)
+
+        const result = await db.query(`select * from Usuarios where cpf='${cpf}'`)
 
         res.send({
-            message: 'Dados Inseridos!'
+            message: 'Dados Inseridos!',
+            usuarios: result.rows
         })
     } catch (error) {
         res.send({
@@ -19,7 +23,7 @@ exports.createUser = async (req, res) => {
 
 exports.findUser = async (req, res) => {
     try {
-        const result = await db.query('select * from Usuarios')
+        const result = await db.query('select * from Usuarios where admin=false')
 
         res.send({
             message: 'Usuarios encontrados com sucesso!',
@@ -53,6 +57,26 @@ exports.loginUser = async (req, res) => {
     } catch (error) {
         res.send({
             message: 'Não foi possível encontrar os dados',
+            error
+        })
+    }
+}
+
+exports.updateUser = async (req, res) => {
+    try {
+        const {nome, cpf, email, id} = req.body;
+
+        await db.query(`update Usuarios set nome='${nome}', cpf=${cpf}, email='${email}' where id=${id}`)
+
+        const result = await db.query(`select * from Usuarios where id=${id}`)
+
+        res.send({
+            message: 'Dados Atualizados!',
+            usuarios: result.rows
+        })
+    } catch (error) {
+        res.send({
+            message: 'Não foi possível atualizar os dados', 
             error
         })
     }
